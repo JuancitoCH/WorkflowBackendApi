@@ -19,12 +19,17 @@ const teamsManage =(app)=>{
     })
     router.post('/add/member/:idTeam',isUser,async(req,res)=>{
         const {idTeam} = req.params
-        const response = await TeamsService.addTeamMember(idTeam,req.body)
+        const response = await TeamsService.addTeamMember(req.userData,idTeam,req.body)
         return res.json(response)
     })
     router.post('/update/member/:idTeam',isUser,async(req,res)=>{
         const {idTeam} = req.params
         const response = await TeamsService.updateMemberRol(req.userData,idTeam,req.body)
+        return res.json(response)
+    })
+    router.post('/delete/member/:idTeam',isUser,async(req,res)=>{
+        const {idTeam} = req.params
+        const response = await TeamsService.deleteMember(req.userData,idTeam,req.body)
         return res.json(response)
     })
 
