@@ -20,8 +20,7 @@ const TeamsShema = new Schema({
             enum: {values:["editor", "validator", "normal", "leader"], message:"{VALUE} is not suported" },
             default: "normal"
         }
-    }],
-    lists: [{ type: String }]
+    }]
 })
 
 const TeamsModel = mongoose.model('teams', TeamsShema)

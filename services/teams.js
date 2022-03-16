@@ -9,9 +9,7 @@ class Teams {
     async getTeamsForIdUser(idUser) {
         const teams = await TeamsModel.find({ members: { $elemMatch: { _id: idUser } } })
             .populate("members._id", "userName email")
-            // .populate("editors","userName Email")
             .populate("leader", "userName email")
-        // .populate("idLeader")
         return teams
     }
     async addTeamMember({ id: idUserLeader }, idTeam, { idUser, rol }) {
@@ -27,21 +25,21 @@ class Teams {
     async updateMemberRol({ id: idUserLeader }, idTeam, { idUser: idUserToUpdate, role: newRole }) {
 
         const { leader } = await TeamsModel.findById(idTeam)
-        //TODO:No se Mantengan usuarios repetidos
+
         if (idUserLeader !== leader.valueOf()) return { success: false, message: "you dont have the permisions" }
         if (newRole === "leader") return await TeamsModel.findByIdAndUpdate(idTeam, { leader: idUserToUpdate }, { new: true })
-        const teamUpdated =await TeamsModel.findByIdAndUpdate(idTeam, { $set: { "members.$[idUser].role": newRole } }, { new:true ,arrayFilters: [{ "idUser._id": idUserToUpdate }] } )
-        return {succes:true,teamUpdated}
+        const teamUpdated = await TeamsModel.findByIdAndUpdate(idTeam, { $set: { "members.$[idUser].role": newRole } }, { new: true, arrayFilters: [{ "idUser._id": idUserToUpdate }] })
+        return { succes: true, teamUpdated }
 
         // return { message: "te as equivocao" }
     }
-    async deleteMember({ id: idUserLeader },idTeam,{idUser}){
-        
+    async deleteMember({ id: idUserLeader }, idTeam, { idUser }) {
+
         const { leader } = await TeamsModel.findById(idTeam)
         if (idUserLeader !== leader.valueOf()) return { success: false, message: "you dont have the permisions" }
-        const team = await TeamsModel.findByIdAndUpdate( idTeam , { $pull : { "members":{_id:idUser} } }, { new: true } )
+        const team = await TeamsModel.findByIdAndUpdate(idTeam, { $pull: { "members": { _id: idUser } } }, { new: true })
 
-        return {succes:true,team}
+        return { succes: true, team }
     }
 
 }

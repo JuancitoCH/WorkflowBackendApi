@@ -2,12 +2,13 @@ const express = require('express')
 const router = express.Router()
 const {isUser,isAdmin} = require('../middlewares/auth')
 const Teams = require('../services/teams')
+const Lists = require('../services/lists')
 const teamsManage =(app)=>{
     //middleware
     app.use('/teams',router)
 
     const TeamsService = new Teams()
-
+    const ListService = new Lists()
 
     router.get('/',isUser,async(req,res)=>{
         const response = await TeamsService.getTeamsForIdUser(req.userData.id)
@@ -35,9 +36,8 @@ const teamsManage =(app)=>{
 
     router.post('/create/teamlist/:idTeam',isUser,async(req,res)=>{
         const {idTeam} = req.params
-        // TODO:
-        // crear lista a partir del id del team
-        return res.status(200).json({message:"algo"})
+        const response = await ListService.createList(idTeam,req.body)
+        return res.status(200).json(response)
     })
     router.post('/create/task/:idList',isUser,async(req,res)=>{
         const {idList} = req.params
