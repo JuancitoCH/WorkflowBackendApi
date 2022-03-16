@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const {isUser,isAdmin} = require('../middlewares/auth')
+// const {isEditorTeam} = require('../middlewares/teamsAuth')
 const Teams = require('../services/teams')
 const Lists = require('../services/lists')
 const teamsManage =(app)=>{
@@ -34,10 +35,33 @@ const teamsManage =(app)=>{
         return res.json(response)
     })
 
+
+
+    //routes listas 
     router.post('/create/teamlist/:idTeam',isUser,async(req,res)=>{
         const {idTeam} = req.params
-        const response = await ListService.createList(idTeam,req.body)
+        const response = await ListService.createListVerify(idTeam,req.body)
         return res.status(200).json(response)
+    })
+    
+  
+    router.get('/teamlist/:idTeam',isUser,async(req,res)=>{
+        const lists = await ListService.getListsByTeamUserVerify(req.params.idTeam,req.userData.id)
+        return res.status(200).json(lists)
+    })
+
+    // FIXME:
+    router.get('/teamlist/lists/:idTeam',isAdmin,async(req,res)=>{
+        const lists = await ListService.getListsByTeam(req.params.idTeam)
+        return res.status(200).json(lists)
+    })
+    router.get('/all/lists',isAdmin,async(req,res)=>{
+        const lists = await ListService.getLists()
+        return res.status(200).json(lists)
+    })
+    router.get('/del/list/:idList',isAdmin,async(req,res)=>{
+        const lists = await ListService.delList(req.params.idList)
+        return res.status(200).json(lists)
     })
     router.post('/create/task/:idList',isUser,async(req,res)=>{
         const {idList} = req.params

@@ -6,6 +6,9 @@ class Teams {
         const team = await TeamsModel.create({ ...data, leader, members: [{ _id: leader }] })
         return team
     }
+    async getOneTeam(idTeam){
+        return await TeamsModel.findById(idTeam)
+    }
     async getTeamsForIdUser(idUser) {
         const teams = await TeamsModel.find({ members: { $elemMatch: { _id: idUser } } })
             .populate("members._id", "userName email")
