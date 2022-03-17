@@ -59,6 +59,10 @@ const teamsManage =(app)=>{
         return res.json(lists)
     })
 
+    router.get('/delete/list/:idTeam',isUser,isEditorTeamAsync,async(req,res)=>{
+        const lists = await ListService.delList(req.body.idList)
+        return res.json(lists)
+    })
 
 
     //tareas administrativas
@@ -74,7 +78,7 @@ const teamsManage =(app)=>{
         const lists = await ListService.delList(req.params.idList)
         return res.json(lists)
     })
-
+    //-----------------------------------------
 
 
     //tasks
