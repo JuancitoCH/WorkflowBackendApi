@@ -17,7 +17,7 @@ const TeamsShema = new Schema({
         },
         role: {
             type: String,
-            enum: {values:["editor", "validator", "normal", "leader"], message:"{VALUE} is not suported" },
+            enum: {values:["editor", "validator", "normal", "leader" , "not"], message:"{VALUE} is not suported" },
             default: "normal"
         }
     }]

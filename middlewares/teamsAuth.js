@@ -1,37 +1,29 @@
 const TeamsModel = require("../model/teamsModel")
 
-// TODO: Usar promesas para el middelware
-const TeamVerify= (req,res,next,idTeam,role)=>{
-    TeamsModel.findById(idTeam)
-    .then(team=>{
-        if(!team) return res.json({success:false, message:"Must specify an existance team"})
-        return team
-    })
-    .then(team=>{
-        let userBool
-        if(req.userData.id === team.leader.valueOf()) return next()
-        team.members.foreach(member=>{if(member._id === req.userData.id && member.role === role) return userBool=true})
-        if(userBool) return next()
-        return res.json({success:false, message:"User Dont Have permissions"})
-    })
-
+// IMPORTANT: El id del team tiene que ser declarado en los params para que funcione actualemente
+const TeamVerify = async (req, res, next, idTeam, role) => {
+    const team = await TeamsModel.findById(idTeam)
+    if (!team) return res.json({ success: false, message: "Must specify an existance team" })
+    console.log(team)
+    let userBool
+    if (req.userData.id === team.leader.valueOf()) return next()
+    team.members.forEach(member => { if (member._id === req.userData.id && member.role === role) return userBool = true })
+    if (userBool) return next()
+    return res.json({ success: false, message: "User Dont Have permissions" })
 }
 
-// const isLeaderTeam=(req,res,next)=>{
-//     TeamVerify(req,res,next,req.params.id,"leader")
-// }
-const isEditorTeam=(req,res,next)=>{
-    TeamVerify(req,res,next,req.params.id,"editor")
+const isLeaderTeam=async(req,res,next)=>{
+    await TeamVerify(req,res,next,req.params.id,"leader")
 }
-// const isValidatorTeam=(req,res,next)=>{
-//     const {leader} = await TeamsModel.findById(idTeam)
-//     if(idUserLeader!==leader.valueOf()) return {success:false,message:"you dont have the permisions"}
-//     next()
-// }
-// const isUserTeam=(req,res,next)=>{
-//     const {leader} = await TeamsModel.findById(idTeam)
-//     if(idUserLeader!==leader.valueOf()) return {success:false,message:"you dont have the permisions"}
-//     next()
-// }
+const isEditorTeam = async (req, res, next) => {
+    await TeamVerify(req, res, next, req.params.idTeam, "editor")
+}
+const isValidatorTeam = async (req, res, next) => {
+    await TeamVerify(req, res, next, req.params.idTeam, "validator")
+}
+const isUserTeam = async (req, res, next) => {
+    await TeamVerify(req, res, next, req.params.idTeam, "normal")
+}
 
-module.exports={isEditorTeam}
+
+module.exports = { isEditorTeam }
