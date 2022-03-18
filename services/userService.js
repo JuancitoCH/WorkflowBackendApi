@@ -10,6 +10,9 @@ class UserService {
     async getUserByEmail(email){
         return await UserModel.findOne({email:email})
     }
+    async getUserByid(idUser){
+        return await UserModel.findById(idUser)
+    }
     async deleteUser(id){
         return await UserModel.findByIdAndDelete(id)
     }

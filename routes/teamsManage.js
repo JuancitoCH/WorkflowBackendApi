@@ -4,6 +4,7 @@ const {isUser,isAdmin} = require('../middlewares/auth')
 const {isEditorTeam} = require('../middlewares/teamsAuth')
 const Teams = require('../services/teams')
 const Lists = require('../services/lists')
+const UserService = require('../services/userService')
 const teamsManage =(app)=>{
     //middleware
     app.use('/teams',router)
@@ -13,6 +14,7 @@ const teamsManage =(app)=>{
     }
     const TeamsService = new Teams()
     const ListService = new Lists()
+    const userService = new UserService()
 
 
     //Equipos
@@ -30,7 +32,13 @@ const teamsManage =(app)=>{
     //miembros
     router.post('/add/member/:idTeam',isUser,async(req,res)=>{
         const {idTeam} = req.params
-        const response = await TeamsService.addTeamMember(req.userData,idTeam,req.body)
+        const userInfo = await userService.getUserByid(req.body.idUser)
+        const response = await TeamsService.addTeamMember(req.userData,idTeam,req.body,userInfo.email)
+        return res.json(response)
+    })
+    router.get('/add/member/confirm/:token',(req,res)=>{
+        const {token} = req.params
+        const response = TeamsService.confirmAddMember(token)
         return res.json(response)
     })
 
