@@ -1,20 +1,19 @@
 const TeamsModel = require('../model/teamsModel')
 
 // FIXME: mover los servicios que requieren de otro a un nuevo archivo servicio
-const UserModel = require('../model/usersModel')
 const sendEmail = require('../libs/email')
 
 class Teams {
 
 // FIXME: mover los servicios que requieren de otro a un nuevo archivo servicio
 
-    async sendEmailIdUser(idUser){
-        const {email} = await UserModel.findById(idUser)
+    async sendEmailIdUser(email){
+        // const {email} = await UserModel.findById(idUser)
+        // console.log(email)
         await sendEmail(email,"Invitacion a Team",'a',
         `<h1>Invitacion a team</h1>
         <p>Querimos qui te unas perro</p>
         `)
-        console.log(email)
     }
 
     async createTeam(leader, data) {
@@ -32,7 +31,7 @@ class Teams {
     }
 // FIXME: mover los servicios que requieren de otro a un nuevo archivo servicio
 
-    async addTeamMember({ id: idUserLeader }, idTeam, { idUser }) {
+    async addTeamMember({ id: idUserLeader,email }, idTeam, { idUser }) {
 
         const { leader } = await TeamsModel.findById(idTeam)
         if (idUserLeader !== leader.valueOf()) return { success: false, message: "you dont have the permisions" }
@@ -40,7 +39,7 @@ class Teams {
         const team = await TeamsModel.findOne({ _id: idTeam, "members._id": { $all: [idUser] } })
         if (team) return { success: false, message: "The User Alredy Exist" }
         const teamUpdated = await TeamsModel.findByIdAndUpdate(idTeam, { $push: { members: { _id: idUser, role:"not" } } }, { new: true })
-        await this.sendEmailIdUser(idUser)
+        await this.sendEmailIdUser(email)
         return { succes: true, team: teamUpdated }
     }
 
