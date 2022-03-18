@@ -5,6 +5,7 @@ const {isEditorTeam} = require('../middlewares/teamsAuth')
 const Teams = require('../services/teams')
 const Lists = require('../services/lists')
 const UserService = require('../services/userService')
+const TasksService = require('../services/tasks')
 const teamsManage =(app)=>{
     //middleware
     app.use('/teams',router)
@@ -15,7 +16,7 @@ const teamsManage =(app)=>{
     const TeamsService = new Teams()
     const ListService = new Lists()
     const userService = new UserService()
-
+    const tasksService = new TasksService()
 
     //Equipos
     router.get('/',isUser,async(req,res)=>{
@@ -56,7 +57,7 @@ const teamsManage =(app)=>{
 
 
     //listas 
-    router.post('/create/teamlist/:idTeam',isUser,async(req,res)=>{
+    router.post('/create/teamlist/:idTeam',isUser,isEditorTeam,async(req,res)=>{
         const {idTeam} = req.params
         const response = await ListService.createListVerify(idTeam,req.body)
         return res.json(response)
@@ -71,6 +72,14 @@ const teamsManage =(app)=>{
         const lists = await ListService.delList(req.body.idList)
         return res.json(lists)
     })
+
+
+    //tasks
+    router.post('/create/task/:idTeam',isUser,isEditorTeam,async(req,res)=>{
+        const task = await tasksService.createTask(req.body)
+        return res.json(task)
+    })
+
 
 
     //tareas administrativas
@@ -89,14 +98,6 @@ const teamsManage =(app)=>{
     //-----------------------------------------
 
 
-    //tasks
-    router.post('/create/task/:idList',isUser,async(req,res)=>{
-        const {idList} = req.params
-        // TODO:
-        // crear tarea a partir del id de la lista
-        // y el id del usuario
-        return res.json({message:"algo"})
-    })
     
 }
 

@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken')
-const {jwt_secret} = require('../config/envVars')
+const {jwt_secret,url} = require('../config/envVars')
 const UserService = require('./userService')
 const bcrypt = require('bcrypt')
 const sendEmail = require("../libs/email")
@@ -49,7 +49,7 @@ class Auth {
         <h2>Verifica Tu correo</h1>
         <p>Tienes 1H</p>
         <br>
-        <a href="${"http://localhost:4000/authenticate/register/validate/"+token.token}">Verify</a>
+        <a href="${url+"/authenticate/register/validate/"+token.token}">Verify</a>
         `)
 
         return token

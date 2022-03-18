@@ -2,9 +2,10 @@ const { mongoose } = require('../config/dbConnection')
 const { Schema } = mongoose
 
 const TasksSchema = new Schema({
-    idList: String,
-    name: String,
-    description: String,
+    idList: {type: mongoose.Schema.Types.ObjectId,
+        ref: "lists", required:true},
+    name: {type:String, required:true,message:"se requiere el {VALUE}"},
+    description: {type:String, required:true},
     state: { type: Boolean, default: false },
     members: [{
         idUser: String
