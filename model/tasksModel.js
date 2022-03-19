@@ -10,7 +10,8 @@ const TasksSchema = new Schema({
     description: { type: String, required: true },
     state: { type: Boolean, default: false },
     members: [{
-        idUser: String
+        idUser: {type: mongoose.Schema.Types.ObjectId,
+        ref: "users", required: true}
     }]
     //task
 })
