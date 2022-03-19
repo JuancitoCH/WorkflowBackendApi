@@ -10,6 +10,9 @@ class Lists {
     async getLists(){
         return await ListsModel.find()
     }
+    async getListById(idList){
+        return await ListsModel.findById(idList)
+    }
     async delList(idList){
         try{
 

@@ -1,11 +1,13 @@
 const express = require('express')
 const router = express.Router()
+// middelwares
 const {isUser,isAdmin} = require('../middlewares/auth')
 const {isEditorTeam,verifyAvailableLists,isUserTeam,isValidatorTeam} = require('../middlewares/teamsAuth')
+// services
 const Teams = require('../services/teams')
 const Lists = require('../services/lists')
-const UserService = require('../services/userService')
-const TasksService = require('../services/tasks')
+const User = require('../services/userService')
+const Tasks = require('../services/tasks')
 // const {verifyAvailableLists} = require('../middlewares/taskListAuth')
 
 const teamsManage =(app)=>{
@@ -28,8 +30,8 @@ const teamsManage =(app)=>{
 
     const TeamsService = new Teams()
     const ListService = new Lists()
-    const userService = new UserService()
-    const tasksService = new TasksService()
+    const userService = new User()
+    const tasksService = new Tasks()
 
     //Equipos
     router.get('/',isUser,async(req,res)=>{
@@ -80,12 +82,29 @@ const teamsManage =(app)=>{
         const lists = await ListService.getListsByTeam(req.params.idTeam)
         return res.json(lists)
     })
-
+    
     router.get('/delete/list/:idTeam',isUser,isEditorTeamAsync,async(req,res)=>{
         const lists = await ListService.delList(req.body.idList)
         return res.json(lists)
     })
 
+
+    //doble peticion
+    router.get('/list/tasks/:idTeam',isUser,isUserTeamAsync,verifyAvailableListsAsync,async(req,res)=>{
+        
+        const list = await ListService.getListById(req.body.idList)
+        const tasks = await tasksService.getTask(req.body.idList,req.userData.id,req.teamMembers,req.teamLeader)
+        return res.json({list,tasks})
+    })
+    router.get('/lists/tasks/:idTeam',isUser,isUserTeamAsync,verifyAvailableListsAsync,async(req,res)=>{
+        
+        const lists = await ListService.getLists()
+        lists.map( (list)=>{
+
+        })
+        const tasks = await tasksService.getTask(req.body.idList,req.userData.id,req.teamMembers,req.teamLeader)
+        return res.json({lists,tasks})
+    })
 
 
     //tasks
@@ -98,8 +117,14 @@ const teamsManage =(app)=>{
         const task = await tasksService.getTask(req.body.idList,req.userData.id,req.teamMembers,req.teamLeader)
         return res.json(task)
     })
-    router.post('/update/task/:idTeam',isUser,isValidatorTeamAsync,verifyAvailableListsAsync,async(req,res)=>{
+    router.post('/update/task/state/:idTeam',isUser,isValidatorTeamAsync,verifyAvailableListsAsync,async(req,res)=>{
         const response = await tasksService.updateStateOfTask(req.body.idTask)
+        return res.json(response)
+    })
+
+    router.post('/update/task/member/:idTeam',isUser,isEditorTeamAsync,verifyAvailableListsAsync,async(req,res)=>{
+        const {idUser,idTask} = req.body
+        const response = await tasksService.addMember(idTask,idUser,req.teamMembers)
         return res.json(response)
     })
 
