@@ -93,10 +93,14 @@ const teamsManage =(app)=>{
         const task = await tasksService.createTask(req.body)
         return res.json(task)
     })
-    // FIXME: que funcione validaciones por numeros y no por strings
+    
     router.post('/get/task/:idTeam',isUser,isUserTeamAsync,verifyAvailableListsAsync,async(req,res)=>{
         const task = await tasksService.getTask(req.body.idList,req.userData.id,req.teamMembers,req.teamLeader)
         return res.json(task)
+    })
+    router.post('/update/task/:idTeam',isUser,isValidatorTeamAsync,verifyAvailableListsAsync,async(req,res)=>{
+        const response = await tasksService.updateStateOfTask(req.body.idTask)
+        return res.json(response)
     })
 
 

@@ -27,6 +27,9 @@ class Tasks {
         if(usuarioEditor) return await TasksModel.find({idList})
         return await TasksModel.find({idList,"members._id":idUser})
     }
+    async updateStateOfTask(idTask){
+        return await TasksModel.findByIdAndUpdate(idTask,{state:true},{new:true})
+    }
 }
 
 module.exports = Tasks

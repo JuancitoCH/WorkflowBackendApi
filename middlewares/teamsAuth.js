@@ -3,11 +3,11 @@ const ListModel = require('../model/listsModel')
 
 
 
-const rolesToNumericValue=(role)=>{
-    if(role==="leader")return 10
-    if(role==="editor")return 5
-    if(role==="validator")return 3
-    if(role==="normal")return 1
+const rolesToNumericValue = (role) => {
+    if (role === "leader") return 10
+    if (role === "editor") return 5
+    if (role === "validator") return 3
+    if (role === "normal") return 1
     return 0
 }
 
@@ -23,8 +23,8 @@ const TeamVerify = async (req, res, next, idTeam, role) => {
 
         let userBool
         if (req.userData.id === team.leader.valueOf()) return next()
-        team.members.forEach(member => { 
-            if (member._id.valueOf() === req.userData.id && rolesToNumericValue(member.role) >= rolesToNumericValue(role)) return userBool = true 
+        team.members.forEach(member => {
+            if (member._id.valueOf() === req.userData.id && rolesToNumericValue(member.role) >= rolesToNumericValue(role)) return userBool = true
         })
         if (userBool) return next()
 
@@ -53,10 +53,16 @@ const verifyAvailableLists = async (req, res, next) => {
     const { idTeam } = req.params
     const { idList } = req.body
     // TODO: Hacer una condicion pára que me traiga exactamente el que quiero
-    const listasEquipos = await ListModel.findOne({ idTeam, _id: idList })
+    try {
+        const listasEquipos = await ListModel.findOne({ idTeam, _id: idList })
+        if (!listasEquipos) return res.json({ success: false, message: "the list on the team dont exist" })
+        next()
+    }
+    catch (err) {
+        return res.json({ success: false, error: err.message })
+    }
     // console.log(listasEquipos)
-    if (!listasEquipos) return res.json({ success: false, message: "the list on the team dont exist" })
-    next()
+
 }
 
 
