@@ -3,12 +3,13 @@ const { Schema } = mongoose
 
 const ComentsSchema = new Schema({
     idTask: String,
-    name: String,
-    description: String,
-    state: { type: Boolean, default: false },
-    members: [{
-        idUser: String
-    }]
+    member:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "users",
+        required:true
+    },
+    comment:String,
+    document:String
     //task
 })
 

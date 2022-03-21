@@ -66,7 +66,7 @@ class Teams {
         if (team) return { success: false, message: "The User Alredy Exist" }
         const teamUpdated = await TeamsModel.findByIdAndUpdate(idTeam, { $push: { members: { _id: idUser, role: "not" } } }, { new: true })
         await this.sendEmailIdUser(email, { idTeam, idUser })
-        return { succes: true, team: teamUpdated }
+        return { success: true, team: teamUpdated }
     }
 
     async updateMemberRol({ id: idUserLeader }, idTeam, { idUser: idUserToUpdate, role: newRole }) {
@@ -76,8 +76,9 @@ class Teams {
         if (idUserLeader !== leader.valueOf()) return { success: false, message: "you dont have the permisions" }
         if (newRole === "leader") return await TeamsModel.findByIdAndUpdate(idTeam, { leader: idUserToUpdate }, { new: true })
         const teamUpdated = await TeamsModel.findByIdAndUpdate(idTeam, { $set: { "members.$[idUser].role": newRole } }, { new: true, arrayFilters: [{ "idUser._id": idUserToUpdate }] })
-        return { succes: true, teamUpdated }
+        return { success: true, teamUpdated }
 
+        
         // return { message: "te as equivocao" }
     }
     async deleteMember({ id: idUserLeader }, idTeam, { idUser }) {
@@ -86,8 +87,9 @@ class Teams {
         if (idUserLeader !== leader.valueOf()) return { success: false, message: "you dont have the permisions" }
         const team = await TeamsModel.findByIdAndUpdate(idTeam, { $pull: { "members": { _id: idUser } } }, { new: true })
 
-        return { succes: true, team }
+        return { success: true, team }
     }
+   
 
 }
 

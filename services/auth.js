@@ -59,7 +59,7 @@ class Auth {
         if(!email || !password) return {success:false,message:"You must include Credentials"}
         const user = await this.userService.getUserByEmail(email)
         if(!user) return {success:false,message:"User not Register"}
-        
+
         const passwordCompare = await bcrypt.compare(password,user.password)
         if(!passwordCompare) return {success:false,message:"Incorrect Password"}
 

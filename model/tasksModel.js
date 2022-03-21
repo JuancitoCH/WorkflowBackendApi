@@ -9,10 +9,9 @@ const TasksSchema = new Schema({
     name: { type: String, required: true, message: "se requiere el {VALUE}" },
     description: { type: String, required: true },
     state: { type: Boolean, default: false },
-    members: [{
-        idUser: {type: mongoose.Schema.Types.ObjectId,
-        ref: "users", required: true}
-    }]
+    members: [
+        {type: mongoose.Schema.Types.ObjectId,
+        ref: "users", required: true}]
     //task
 })
 

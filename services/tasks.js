@@ -1,4 +1,5 @@
 const TasksModel = require('../model/tasksModel')
+const ComentsModel = require('../model/comentariosTasksModel')
 
 class Tasks {
     validateTask(task) {
@@ -19,13 +20,13 @@ class Tasks {
         return await task.save()
     }
     async getTask(idList, idUser, listasDeMiembros, leader) {
-        if (idUser === leader.valueOf()) return await TasksModel.find({ idList })
+        if (idUser === leader.valueOf()) return await TasksModel.find({ idList }).populate("members","email userPhoto")
         let usuarioEditor
         listasDeMiembros.forEach(member => {
             if (member._id.valueOf() === idUser && member.role === "editor") return usuarioEditor = true
         });
         if (usuarioEditor) return await TasksModel.find({ idList })
-        return await TasksModel.find({ idList, "members._id": idUser })
+        return await TasksModel.find({ idList, "members": [idUser] })
     }
     async updateStateOfTask(idTask) {
         // porcua entre corchetes si funciona la query?????????
@@ -35,15 +36,33 @@ class Tasks {
         // https://platzi.com/contributions/introduccion-al-pipeline-de-agregacion-de-mongodb/?gclid=CjwKCAjw_tWRBhAwEiwALxFPoZCIKIewhs5s2wZGRLoZglwEZkoL5gk3u-dDc2duClv-6cT_NHIHdxoCSxYQAvD_BwE&gclsrc=aw.ds
         return await TasksModel.findByIdAndUpdate(idTask, [{ $set: { state: { $not: "$state" } } }], { new: true })
     }
+    async updateGlobalTask(idTask,taskData) {
+        
+        return await TasksModel.findByIdAndUpdate(idTask, taskData)
+    }
     async addMember(idTask, idUser, teamMembers) {
         let userOnTheTeam
         teamMembers.map(user => { if (user._id.valueOf() === idUser) return userOnTheTeam = true })
-        if (userOnTheTeam) return await TasksModel.findByIdAndUpdate(idTask, { $push: { members: { _id: idUser } } }, { new: true })
+        if (userOnTheTeam) return await TasksModel.findByIdAndUpdate(idTask, { $push: { members: idUser } }, { new: true })
         return { success: false, message: "User is not on the team" }
 
     }
     async deleteMember(idTask, idUser) {
-        return await TasksModel.findByIdAndUpdate(idTask, { $pull: { "members": {_id:idUser} } },{new:true})
+        return await TasksModel.findByIdAndUpdate(idTask, { $pull: { "members": idUser } },{new:true})
+    }
+
+    // comentarios
+    async commentTask(idTask,comment,member,document=""){
+        return await ComentsModel.create({idTask,comment,member,document})
+    }
+    async getCommentTask(idComment){
+        return await ComentsModel.findById(idComment)
+    }
+    async deleteCommentTask(idComment,idUser){
+        const comment =await this.getCommentTask(idComment)
+        if(comment.member.valueOf()===idUser) return await ComentsModel.findByIdAndDelete(idComment)
+        return {success:false,message:"You dont have permisions"}
+        
     }
 }
 

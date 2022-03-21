@@ -19,5 +19,16 @@ class UserService {
     async updateUser(id,data){
         return await UserModel.findByIdAndUpdate(id,data,{new:true})
     }
+    async getUserByEmailForShare(email){
+        if(!email) return {success:false,message:"You must include credentials"}
+        const user = await UserModel.findOne({email})
+        if(!user) return {success:false,message:"User Dont exist"}
+        return {
+            _id:user._id,
+            email:user.email,
+            userName:user.userName
+     
+        }
+    }
 }
 module.exports = UserService

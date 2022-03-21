@@ -1,6 +1,6 @@
 const TeamsModel = require("../model/teamsModel")
 const ListModel = require('../model/listsModel')
-
+const TasksModel = require('../model/tasksModel')
 
 
 const rolesToNumericValue = (role) => {
@@ -49,10 +49,7 @@ const isUserTeam = async (req, res, next) => {
 }
 
 
-const verifyAvailableLists = async (req, res, next) => {
-    const { idTeam } = req.params
-    const { idList } = req.body
-    // TODO: Hacer una condicion pára que me traiga exactamente el que quiero
+const searchAvailableList=async (req,res,next,idTeam,idList)=>{
     try {
         const listasEquipos = await ListModel.findOne({ idTeam, _id: idList })
         if (!listasEquipos) return res.json({ success: false, message: "the list on the team dont exist" })
@@ -61,9 +58,31 @@ const verifyAvailableLists = async (req, res, next) => {
     catch (err) {
         return res.json({ success: false, error: err.message })
     }
-    // console.log(listasEquipos)
+}
 
+const verifyAvailableLists = async (req, res, next) => {
+    const { idTeam } = req.params
+    const { idList,idTask } = req.body
+    await searchAvailableList(req,res,next,idTeam,idList)
+}
+
+const verifyTaskAndList = async (req, res, next) => {
+    const { idTeam } = req.params
+    const { idTask } = req.body
+    if(idTask){
+        try{
+            const task = await TasksModel.findById(idTask)
+            if(!task) return res.json({ success: false, message: "Task dont exist" })
+            req.task = task
+            await searchAvailableList(req,res,next,idTeam,task.idList)
+        }
+        catch(err){
+            return res.json({ success: false, error: err.message })
+        }
+    }
+    if(!idTask) return res.json({ success: false, message: "'idTask' is not include in the credentials" })
+    
 }
 
 
-module.exports = { isEditorTeam, verifyAvailableLists, isUserTeam, isValidatorTeam }
+module.exports = { isEditorTeam, verifyAvailableLists, isUserTeam, isValidatorTeam,verifyTaskAndList }
