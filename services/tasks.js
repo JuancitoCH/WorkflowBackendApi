@@ -26,7 +26,7 @@ class Tasks {
             if (member._id.valueOf() === idUser && member.role === "editor") return usuarioEditor = true
         });
         if (usuarioEditor) return await TasksModel.find({ idList })
-        return await TasksModel.find({ idList, "members": [idUser] })
+        return await TasksModel.find({ idList, "members": idUser }).populate("members","email userPhoto")
     }
     async updateStateOfTask(idTask) {
         // porcua entre corchetes si funciona la query?????????

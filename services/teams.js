@@ -55,7 +55,7 @@ class Teams {
     }
 
 
-    // FIXME: mover los servicios que requieren de otro a un nuevo archivo servicio
+    // FIXME: Sacar autenticacion de leader, este se realiza fuera del servicio en el middleware
 
     async addTeamMember({ id: idUserLeader }, idTeam, { idUser }, email) {
 
