@@ -23,7 +23,7 @@ const userCred =(app)=>{
     })
     
     router.post('/logged',isUser,async(req,res)=>{
-        return res.json({logged:true,success:true})
+        return res.json({logged:true,success:true,user:req.userData})
     })
     
 
