@@ -6,9 +6,9 @@ const configV = require('../config/envVars')
 const Permisos=(rol,req,res,next)=>{
     try{
         const {token} = req.cookies
-        if(!token)  return res.status(403).json({success:false,message:"token is require"})
+        if(!token)  return res.json({success:false,message:"token is require"})
         const userData = jwt.verify(token,jwt_secret)
-        if(userData.rol<rol) return res.status(403).json({success:false,message:"you don't have permissions"})
+        if(userData.rol<rol) return res.json({success:false,message:"you don't have permissions"})
         // console.log(userData)
         // aqui guardamos cada vez que el
         // middelware sea llamado y tengo la data del user a mano
