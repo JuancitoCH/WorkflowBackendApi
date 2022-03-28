@@ -9,7 +9,7 @@ class Comment{
         
     }
     async getCommentTask(idComment){
-        return await ComentsModel.findById(idComment)
+        return await ComentsModel.findById(idComment).populate('member','email photo userName')
     }
     async deleteCommentTask(idComment,idUser){
         const taskService = new Task()
