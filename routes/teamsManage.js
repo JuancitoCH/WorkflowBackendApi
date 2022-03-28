@@ -40,6 +40,11 @@ const teamsManage = (app) => {
         const response = await TeamsService.getTeamsForIdUser(req.userData.id)
         return res.json(response)
     })
+    
+    router.get('/member/role/:idTeam', isUser, async (req, res) => {
+        const response = await TeamsService.getUserRoleByTeam(req.params.idTeam,req.userData.id)
+        return res.json(response)
+    })
     router.post('/create/team', isUser, async (req, res) => {
         const response = await TeamsService.createTeam(req.userData.id, req.body)
         return res.json(response)

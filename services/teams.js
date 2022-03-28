@@ -77,7 +77,6 @@ class Teams {
         if (newRole === "leader") return await TeamsModel.findByIdAndUpdate(idTeam, { leader: idUserToUpdate }, { new: true })
         const teamUpdated = await TeamsModel.findByIdAndUpdate(idTeam, { $set: { "members.$[idUser].role": newRole } }, { new: true, arrayFilters: [{ "idUser._id": idUserToUpdate }] })
         return { success: true, teamUpdated }
-
         
         // return { message: "te as equivocao" }
     }
@@ -88,6 +87,15 @@ class Teams {
         const team = await TeamsModel.findByIdAndUpdate(idTeam, { $pull: { "members": { _id: idUser } } }, { new: true })
 
         return { success: true, team }
+    }
+    async getUserRoleByTeam(idTeam,idUser){
+        const team = await TeamsModel.findById(idTeam)
+        if(idUser===team.leader.valueOf()) return "leader"
+        let role
+        team.members.map(member=>{
+            if(member._id.valueOf()===idUser) role=member.role
+        })
+        return role
     }
    
 
