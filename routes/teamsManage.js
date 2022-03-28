@@ -40,7 +40,12 @@ const teamsManage = (app) => {
         const response = await TeamsService.getTeamsForIdUser(req.userData.id)
         return res.json(response)
     })
-    
+    router.get('/oneTeam/:idTeam', isUser, async (req, res) => {
+        const { idTeam } = req.params
+        const response = await TeamsService.getOneTeam(idTeam)
+        return res.json(response)
+    })
+
     router.get('/member/role/:idTeam', isUser, async (req, res) => {
         const response = await TeamsService.getUserRoleByTeam(req.params.idTeam,req.userData.id)
         return res.json(response)

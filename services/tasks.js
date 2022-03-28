@@ -38,7 +38,12 @@ class Tasks {
     }
     async updateGlobalTask(idTask,taskData) {
         
-        return await TasksModel.findByIdAndUpdate(idTask, taskData)
+        try{
+            return await TasksModel.findByIdAndUpdate(idTask, taskData)
+        }
+        catch(err){
+            return {success:false,message:err.message}
+        }
     }
     async addMember(idTask, idUser, teamMembers) {
         let userOnTheTeam
@@ -48,7 +53,13 @@ class Tasks {
 
     }
     async deleteMember(idTask, idUser) {
-        return await TasksModel.findByIdAndUpdate(idTask, { $pull: { "members": idUser } },{new:true})
+        try{
+
+            return await TasksModel.findByIdAndUpdate(idTask, { $pull: { "members": idUser } },{new:true})
+        }
+        catch(err){
+            return {success:false,message:err.message}
+        }
     }
 
     // comentarios
