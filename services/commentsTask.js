@@ -14,7 +14,7 @@ class Comment{
     async deleteCommentTask(idComment,idUser){
         const taskService = new Task()
 
-        const comment =await this.getCommentTask(idComment)
+        const comment =await ComentsModel.findById(idComment)
         console.log(comment)
         if(comment.member.valueOf()===idUser){
             await ComentsModel.findByIdAndDelete(idComment)

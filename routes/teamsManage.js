@@ -155,7 +155,6 @@ const teamsManage = (app) => {
         return res.json(response)
     })
 
-    // TODO: Probar esta ruta
     router.post('/update/task/global/:idTeam', isUser, isEditorTeamAsync, verifyTaskAndList, async (req, res) => {
         const response = await tasksService.updateGlobalTask(req.body.idTask,req.body)
         return res.json(response)
