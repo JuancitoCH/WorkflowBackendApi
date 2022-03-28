@@ -20,7 +20,7 @@ class Tasks {
         return await task.save()
     }
     async getTask(idList, idUser, listasDeMiembros, leader) {
-        if (idUser === leader.valueOf()) return await TasksModel.find({ idList }).populate("members","email userPhoto").populate('comments')
+        if (idUser === leader.valueOf()) return await TasksModel.find({ idList }).populate("members","email userPhoto").populate('comments').populate('comments.member','email photo userName')
         let usuarioEditor
         listasDeMiembros.forEach(member => {
             if (member._id.valueOf() === idUser && member.role === "editor") return usuarioEditor = true
