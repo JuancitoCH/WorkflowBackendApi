@@ -20,13 +20,13 @@ class Tasks {
         return await task.save()
     }
     async getTask(idList, idUser, listasDeMiembros, leader) {
-        if (idUser === leader.valueOf()) return await TasksModel.find({ idList }).populate("members","email userPhoto").populate('comments').populate('comments.member','email photo userName')
+        if (idUser === leader.valueOf()) return await TasksModel.find({ idList }).populate("members","email userPhoto").populate({path:'comments',select: 'comment document _id member', populate:{path:"member" , select:'email photo userName'}})
         let usuarioEditor
         listasDeMiembros.forEach(member => {
             if (member._id.valueOf() === idUser && member.role === "editor") return usuarioEditor = true
         });
-        if (usuarioEditor) return await TasksModel.find({ idList })
-        return await TasksModel.find({ idList, "members": idUser }).populate("members","email userPhoto")
+        if (usuarioEditor) return await TasksModel.find({ idList }).populate("members","email userPhoto").populate({path:'comments',select: 'comment document _id member', populate:{path:"member" , select:'email photo userName'}})
+        return await TasksModel.find({ idList, "members": idUser }).populate("members","email userPhoto").populate({path:'comments',select: 'comment document _id member', populate:{path:"member" , select:'email photo userName'}})
     }
     async updateStateOfTask(idTask) {
         // porcua entre corchetes si funciona la query?????????
