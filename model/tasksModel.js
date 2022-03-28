@@ -11,7 +11,11 @@ const TasksSchema = new Schema({
     state: { type: Boolean, default: false },
     members: [
         {type: mongoose.Schema.Types.ObjectId,
-        ref: "users", required: true}]
+        ref: "users", required: true}],
+    comments:[
+        {type: mongoose.Schema.Types.ObjectId,
+        ref: "comments"}
+    ]
     //task
 })
 

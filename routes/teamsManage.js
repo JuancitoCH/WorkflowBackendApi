@@ -54,6 +54,12 @@ const teamsManage = (app) => {
         const response = await TeamsService.createTeam(req.userData.id, req.body)
         return res.json(response)
     })
+    // añadir a front
+    router.post('/update/team/:idTeam', isUser, async (req, res) => {
+        const {idTeam} = req.params
+        const response = await TeamsService.updateTeam(req.userData.id,idTeam, req.body)
+        return res.json(response)
+    })
 
 
 

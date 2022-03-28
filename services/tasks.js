@@ -20,7 +20,7 @@ class Tasks {
         return await task.save()
     }
     async getTask(idList, idUser, listasDeMiembros, leader) {
-        if (idUser === leader.valueOf()) return await TasksModel.find({ idList }).populate("members","email userPhoto")
+        if (idUser === leader.valueOf()) return await TasksModel.find({ idList }).populate("members","email userPhoto").populate('comments')
         let usuarioEditor
         listasDeMiembros.forEach(member => {
             if (member._id.valueOf() === idUser && member.role === "editor") return usuarioEditor = true
@@ -39,7 +39,7 @@ class Tasks {
     async updateGlobalTask(idTask,taskData) {
         
         try{
-            return await TasksModel.findByIdAndUpdate(idTask, taskData)
+            return await TasksModel.findByIdAndUpdate(idTask, taskData,{new:true})
         }
         catch(err){
             return {success:false,message:err.message}

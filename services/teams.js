@@ -83,6 +83,16 @@ class Teams {
         
         // return { message: "te as equivocao" }
     }
+
+
+    async updateTeam(idUser, idTeam, data) {
+
+        const { leader } = await TeamsModel.findById(idTeam)
+        if (idUser !== leader.valueOf()) return { success: false, message: "you dont have the permisions" }
+        const teamUpdated = await TeamsModel.findByIdAndUpdate(idTeam, data , { new: true })
+        return { success: true, teamUpdated }
+    }
+
     async deleteMember({ id: idUserLeader }, idTeam, { idUser }) {
 
         const { leader } = await TeamsModel.findById(idTeam)

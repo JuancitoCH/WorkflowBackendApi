@@ -15,5 +15,5 @@ const ComentsSchema = new Schema({
 
 
 
-const ComentsModel = mongoose.model('coments', ComentsSchema)
+const ComentsModel = mongoose.model('comments', ComentsSchema)
 module.exports = ComentsModel
