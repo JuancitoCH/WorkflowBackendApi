@@ -32,6 +32,10 @@ class Lists {
     async createList(idTeam,listData){
         return await ListsModel.create({...listData,idTeam,date:new Date()})
     }
+
+    async updateList(idList,listData){
+        return await ListsModel.findByIdAndUpdate(idList,listData,{new:true})
+    }
     
     async createListVerify(idTeam,listData){
         if(!idTeam) return {success:false, message:"Must specify the team"}

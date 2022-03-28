@@ -99,6 +99,12 @@ const teamsManage = (app) => {
         return res.json(response)
     })
 
+    router.post('/update/teamlist/:idTeam', isUser, isEditorTeamAsync, async (req, res) => {
+        const { idTeam } = req.params
+        const response = await ListService.updateList(req.body.idList,req.body)
+        return res.json(response)
+    })
+
     router.get('/teamlist/:idTeam', isUser, isEditorTeamAsync, async (req, res) => {
         const lists = await ListService.getListsByTeam(req.params.idTeam)
         return res.json(lists)
