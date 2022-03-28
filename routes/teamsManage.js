@@ -42,7 +42,7 @@ const teamsManage = (app) => {
     })
     router.get('/oneTeam/:idTeam', isUser, async (req, res) => {
         const { idTeam } = req.params
-        const response = await TeamsService.getOneTeam(idTeam)
+        const response = await TeamsService.getOneTeamPopulate(idTeam)
         return res.json(response)
     })
 
