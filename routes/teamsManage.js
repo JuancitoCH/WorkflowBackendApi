@@ -199,8 +199,8 @@ const teamsManage = (app) => {
         const lists = await ListService.getLists()
         return res.json(lists)
     })
-    router.get('/del/list/:idList', isAdmin, async (req, res) => {
-        const lists = await ListService.delList(req.params.idList)
+    router.get('/del/list/:idTeam', isUser,isUserTeamAsync, async (req, res) => {
+        const lists = await ListService.delList(req.body.idList)
         return res.json(lists)
     })
     //-----------------------------------------
