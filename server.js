@@ -9,6 +9,7 @@ const {connection:db} = require('./config/dbConnection')
 const cookies = require('cookie-parser')
 const cors = require('cors')
 const teamsManage = require('./routes/teamsManage')
+const files = require('./routes/files')
 
 const app = express()
 
@@ -27,6 +28,7 @@ db()
 userCred(app)
 user(app)
 teamsManage(app)
+files(app)
 
 //url gets
 app.get('/',(req,res)=>{
