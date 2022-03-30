@@ -32,7 +32,7 @@ const uploadFile = (fileName,buffer)=>{
 
     // mirar apuntes porque las promesas no las cazo bien aun
     return new Promise((resolve,reject)=>{
-
+        // pipe envia el stream a lo que especifiquemos dentro
         stream.pipe(file.createWriteStream())
         .on("finish",()=>{
             resolve({success:true,message:"File uploaded succesfully",fileName:uuidFileName})
@@ -55,6 +55,7 @@ const downloadFile = (fileName,res)=>{
             res.status(error.code).json({error:true,message:"No se encontró el archivo"})
         }
     }) 
+    // pipe envia el stream a lo que especifiquemos dentro
     stream.pipe(res)
 }
 
