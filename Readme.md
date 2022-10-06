@@ -13,6 +13,7 @@ Acordate de la documentacion de postman
 *External Services:*
 - Google cloud for hosting
 - MongoDB Atlas
+- SendGrid for send Emails
 
 *Google Cloud Services:*
 - App Engine
